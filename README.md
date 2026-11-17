@@ -28,7 +28,7 @@ Accounts, friends, game library, anime, chat, arcade and PC monitoring are still
 ## Getting started
 
 ```bash
-git clone https://github.com/<your-username>/nexus.git
+git clone https://github.com/Shirveonn/nexus.git
 cd nexus
 npm install
 npm run dev
