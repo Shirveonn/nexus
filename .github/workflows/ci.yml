@@ -10,6 +10,11 @@ jobs:
   windows:
     name: Test & build on Windows
     runs-on: windows-latest
+    env:
+      # Set these under Settings → Secrets and variables → Actions → Variables (see docs/SUPABASE_SETUP.md).
+      # When they're empty the installer still works, in guest-only mode.
+      RENDERER_VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      RENDERER_VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -36,3 +41,28 @@ jobs:
           name: NEXUS-windows-installer
           path: release/*.exe
           retention-days: 14
+
+  database:
+    name: Database security tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start local Supabase (applies migrations)
+        run: npm run db:start
+
+      - name: Run database tests
+        run: npm run test:db
+
+      - name: Generated types are up to date
+        run: |
+          npm run db:types
+          git diff --exit-code --ignore-all-space src/renderer/src/types/database.ts || (echo "::error::Run 'npm run db:types' and commit the result" && exit 1)
