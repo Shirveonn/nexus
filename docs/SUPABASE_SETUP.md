@@ -14,9 +14,20 @@ NEXUS uses [Supabase](https://supabase.com) for accounts, profiles and (later) f
 
 ## 2. Create the database tables
 
-1. In the project, open **SQL Editor** and click **New query**.
-2. Open [`supabase/migrations/20261117000000_profiles.sql`](../supabase/migrations/20261117000000_profiles.sql) from this repo, copy **all** of it, paste it in and click **Run**.
-3. You should see "Success. No rows returned". Under **Table Editor** there's now a `profiles` table, and under **Storage** an `avatars` bucket.
+The database is built from the SQL files in [`supabase/migrations/`](../supabase/migrations/). Run them **in order (oldest first), once each**:
+
+| File | Adds |
+| --- | --- |
+| `20261117000000_profiles.sql` | accounts, profiles, usernames, avatars (v0.3.0) |
+| `20261118000000_friends.sql` | friends, requests, blocking, online status (v0.4.0) |
+
+For each file:
+1. Open **SQL Editor** and click **New query**.
+2. Copy **all** of the file, paste it in and click **Run**. You should see "Success. No rows returned".
+
+Afterwards **Table Editor** shows `profiles`, `friendships`, `blocks` and `user_status`, and **Storage** shows an `avatars` bucket.
+
+> **Already set up for 0.3.0?** Only run the files you haven't run yet. Running one twice gives an "already exists" error, which is harmless but means it was already applied.
 
 <details>
 <summary>Alternative: use the Supabase CLI</summary>
@@ -93,7 +104,7 @@ You can run a complete private Supabase on your own PC to experiment without tou
 
 ```bash
 npm run db:start      # starts Supabase locally and prints its URL and keys
-npm run test:db       # runs the 24 security tests against it
+npm run test:db       # runs the 41 security tests against it
 npm run db:reset      # wipes it and re-applies the migrations
 npm run db:stop
 ```

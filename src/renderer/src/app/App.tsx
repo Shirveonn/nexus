@@ -7,6 +7,8 @@ import { Toaster } from "@/components/ui/Toaster";
 import { AuthScreen } from "@/features/auth/AuthScreen";
 import { useAuth } from "@/features/auth/authStore";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
+import { FriendsPage } from "@/features/friends/FriendsPage";
+import { useFriends } from "@/features/friends/friendsStore";
 import { PlaceholderPage } from "@/features/placeholder/PlaceholderPage";
 import { ProfilePage } from "@/features/profile/ProfilePage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
@@ -26,6 +28,14 @@ export function App() {
   const hasWallpaper = useSettings(s => s.appearance.background.kind !== "none");
 
   useEffect(() => initAuth(), [initAuth]);
+
+  // Friends, online status and live updates run while someone is signed in.
+  const userId = useAuth(s => s.user?.id ?? null);
+  useEffect(() => {
+    const friends = useFriends.getState();
+    if (status === "signedIn" && userId) friends.start(userId);
+    else friends.stop();
+  }, [status, userId]);
 
   // After signing out, the next sign-in should start on the dashboard.
   useEffect(() => {
@@ -50,6 +60,7 @@ export function App() {
               {page === "Home" ? <DashboardPage />
                 : page === "Settings" ? <SettingsPage />
                 : page === "Profile" ? <ProfilePage />
+                : page === "Friends" ? <FriendsPage />
                 : <PlaceholderPage page={page} />}
             </div>
           </main>

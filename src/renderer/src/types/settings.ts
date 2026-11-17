@@ -39,7 +39,7 @@ export interface Appearance {
   reduceMotion: boolean;
 }
 
-export type WidgetId = "hero" | "stats" | "quick" | "activity" | "clock" | "notes";
+export type WidgetId = "hero" | "stats" | "friends" | "quick" | "activity" | "clock" | "notes";
 export type WidgetSpan = 1 | 2 | 3 | 4;
 
 export interface WidgetLayout {

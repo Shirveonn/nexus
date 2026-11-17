@@ -12,8 +12,9 @@ export const DEFAULT_APPEARANCE: Appearance = {
 export const DEFAULT_WIDGETS: WidgetLayout[] = [
   { id: "hero", span: 4, visible: true },
   { id: "stats", span: 4, visible: true },
+  { id: "friends", span: 2, visible: true },
   { id: "quick", span: 2, visible: true },
-  { id: "activity", span: 2, visible: true },
+  { id: "activity", span: 2, visible: false },
   { id: "clock", span: 1, visible: false },
   { id: "notes", span: 2, visible: false }
 ];

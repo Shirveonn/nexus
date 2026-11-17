@@ -40,15 +40,19 @@ Extras: guest mode, forgot-password flow with codes, refusing to run with a leak
 
 > **To go live:** follow [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) to create the free Supabase project, then add its URL and publishable key to `.env` and to the GitHub repository variables.
 
-## Phase 4 – Friends · v0.4.0 – Social system
+## Phase 4 – Friends · v0.4.0 – Social system ✅
 
-- [ ] Add friends
-- [ ] Friend requests
-- [ ] Accept and decline requests
-- [ ] Online/offline status
-- [ ] Friend profiles
-- [ ] Recently active friends
-- [ ] Friend list management
+- [x] Add friends: search by username or display name
+- [x] Friend requests: send, cancel; if they already asked you, it's accepted automatically
+- [x] Accept and decline requests: with live notifications and a badge in the sidebar
+- [x] Online/offline status: live via Supabase Realtime, visible to friends only; "appear offline" option
+- [x] Friend profiles: profile pop-up with "friends since" and last seen
+- [x] Recently active friends: Friends widget on the dashboard and a sorted friends list
+- [x] Friend list management: remove friends, block and unblock users
+
+Security: friendships can only change through checked database functions. Blocked users can't find you, see your profile or send requests. 17 new database tests (41 total).
+
+> **To go live:** run `supabase/migrations/20261118000000_friends.sql` in your Supabase SQL Editor (see docs/SUPABASE_SETUP.md).
 
 ## Phase 5 – Gaming center · v0.5.0 – Gaming hub
 

@@ -33,7 +33,10 @@ describe("dashboard layout", () => {
     const repaired = normalizeLayout([{ id: "quick", span: 9 }, { id: "quick" }, { id: "evil" }, null, "x"]);
     expect(repaired[0]).toEqual({ id: "quick", span: 4, visible: true });
     expect(new Set(ids(repaired))).toEqual(new Set(ids(DEFAULT_WIDGETS)));
-    expect(repaired.filter(w => w.id !== "quick").every(w => !w.visible)).toBe(true);
+    // Missing widgets come back with their default visibility (so new widgets appear for existing users).
+    for (const w of repaired.filter(w => w.id !== "quick")) {
+      expect(w.visible).toBe(DEFAULT_WIDGETS.find(d => d.id === w.id)!.visible);
+    }
     expect(normalizeLayout(undefined)).toEqual(DEFAULT_WIDGETS);
   });
 });

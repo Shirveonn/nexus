@@ -1,6 +1,7 @@
 import { ChevronDown, LogIn, Zap } from "lucide-react";
 import { navGroups, navigation } from "@/app/navigation";
 import { profileName, useAuth } from "@/features/auth/authStore";
+import { isOnline, selectFriends, selectIncoming, useFriends } from "@/features/friends/friendsStore";
 import { Avatar } from "@/features/profile/Avatar";
 import { useSettings } from "@/store/settingsStore";
 import { useUi } from "@/store/uiStore";
@@ -48,7 +49,7 @@ export function Sidebar() {
                 >
                   <Icon size={17} strokeWidth={1.8} />
                   {!compact && <span>{item.label}</span>}
-                  {!compact && item.label === "Friends" && <span className="nav-count">0</span>}
+                  {item.label === "Friends" && <FriendsBadge compact={compact} />}
                 </button>
               );
             })}
@@ -64,10 +65,21 @@ export function Sidebar() {
   );
 }
 
+/** Pending requests (highlighted) or the number of friends online. */
+function FriendsBadge({ compact }: { compact: boolean }) {
+  const incoming = useFriends(s => selectIncoming(s).length);
+  const online = useFriends(s => selectFriends(s).filter(f => isOnline(f, s.serverNow())).length);
+  useFriends(s => s.tick);
+  if (incoming > 0) return <span className={`nav-count is-alert ${compact ? "is-dot" : ""}`} title={`${incoming} friend request${incoming === 1 ? "" : "s"}`}>{compact ? "" : incoming}</span>;
+  if (compact || online === 0) return null;
+  return <span className="nav-count" title={`${online} online`}><i className="presence-dot is-online inline" /> {online}</span>;
+}
+
 function ConnectionStatus() {
   const status = useAuth(s => s.status);
+  const appearOffline = useFriends(s => s.appearOffline);
   const label =
-    status === "signedIn" ? "Online" :
+    status === "signedIn" ? (appearOffline ? "Appearing offline" : "Online") :
     status === "unconfigured" ? "Offline mode" :
     status === "loading" ? "Connecting…" : "Guest mode";
   return (

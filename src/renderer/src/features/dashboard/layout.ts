@@ -38,7 +38,7 @@ export function setVisible(widgets: WidgetLayout[], id: WidgetId, visible: boole
 
 /**
  * Repairs a stored layout: drops unknown/duplicate widgets, fixes spans,
- * and appends any widgets added in newer versions of NEXUS (hidden by default).
+ * and appends any widgets added in newer versions of NEXUS (with their default visibility).
  */
 export function normalizeLayout(input: unknown): WidgetLayout[] {
   if (!Array.isArray(input)) return structuredClone(DEFAULT_WIDGETS);
@@ -53,7 +53,7 @@ export function normalizeLayout(input: unknown): WidgetLayout[] {
     result.push({ id, span: clampSpan(typeof span === "number" ? span : 2), visible: visible !== false });
   }
   for (const def of DEFAULT_WIDGETS) {
-    if (!seen.has(def.id)) result.push({ ...def, visible: false });
+    if (!seen.has(def.id)) result.push({ ...def });
   }
   return result;
 }

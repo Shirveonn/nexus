@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from "react";
-import { KeyRound, LogIn, LogOut, Mail, MonitorSmartphone, ServerOff, ShieldAlert, Trash2 } from "lucide-react";
+import { EyeOff, KeyRound, LogIn, LogOut, Mail, MonitorSmartphone, ServerOff, ShieldAlert, Trash2 } from "lucide-react";
 import { Field, FormError, SubmitButton } from "@/components/ui/Field";
-import { Panel, SettingRow } from "@/components/ui/controls";
+import { Panel, SettingRow, Toggle } from "@/components/ui/controls";
+import { useFriends } from "@/features/friends/friendsStore";
 import * as api from "@/features/auth/authApi";
 import { useAuth } from "@/features/auth/authStore";
 import { friendlyError, validateCode, validateEmail, validatePassword } from "@/features/auth/validation";
@@ -25,6 +26,7 @@ export function AccountTab() {
   }
   return (
     <>
+      <PrivacyPanel />
       <EmailPanel />
       <PasswordPanel />
       <SessionsPanel />
@@ -44,6 +46,20 @@ function NotConfigured() {
         <li>Copy <strong>.env.example</strong> to <strong>.env</strong> and paste in your Project URL and <em>publishable</em> key.</li>
         <li>Restart <code>npm run dev</code>.</li>
       </ol>
+    </Panel>
+  );
+}
+
+function PrivacyPanel() {
+  const appearOffline = useFriends(s => s.appearOffline);
+  const setAppearOffline = useFriends(s => s.setAppearOffline);
+  const toast = useUi(s => s.toast);
+  return (
+    <Panel title="Privacy" icon={<EyeOff size={18} />}>
+      <SettingRow label="Appear offline" hint="Friends see you as offline and your “last seen” time stops updating.">
+        <Toggle label="Appear offline" checked={appearOffline}
+          onChange={v => void setAppearOffline(v).then(() => toast(v ? "You now appear offline" : "You're visible again", "info"), err => toast(friendlyError(err), "error"))} />
+      </SettingRow>
     </Panel>
   );
 }

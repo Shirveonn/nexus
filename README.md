@@ -2,7 +2,7 @@
 
 A fully customizable Windows desktop hub for our friend group: gaming, anime, friends, chat, mini-games and PC stats in one place. Built only with free tools and free services.
 
-**Current version: `0.3.0` – User accounts.** See [ROADMAP.md](ROADMAP.md) for what's done and what's next.
+**Current version: `0.4.0` – Friends.** See [ROADMAP.md](ROADMAP.md) for what's done and what's next.
 
 ## What works right now
 
@@ -19,8 +19,11 @@ A fully customizable Windows desktop hub for our friend group: gaming, anime, fr
 - **Profiles**: profile picture, display name, bio, favourite game and anime, profile color
 - **Account settings**: change email or password, sign out on this PC or everywhere, delete your account
 - **Guest mode**: use NEXUS without an account (local features only)
+- **Friends**: find people by username, send/accept/decline/cancel requests, remove friends, block users
+- **Live online status**: see who's online and when friends were last seen, updating live; "appear offline" option
+- **Friends widget** on the dashboard and a friend-request badge in the sidebar
 
-Friends, game library, anime, chat, arcade and PC monitoring are still placeholders; they arrive in later versions.
+Game library, anime, chat, arcade and PC monitoring are still placeholders; they arrive in later versions.
 
 > **First time?** Accounts need a free Supabase project. Follow **[docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)**. Without it, NEXUS runs in guest mode.
 
@@ -78,7 +81,8 @@ src/renderer/
       ui/                Reusable controls (toggle, slider, segmented, panel, toasts)
     features/            One folder per module
       auth/              Sign-in screen, auth state (authStore), account actions, input rules
-      profile/           Profile page, avatars, profile API
+      profile/           Profile page, avatars, shared profile card
+      friends/           Friends page, requests, search, blocking, live online status
       dashboard/         Home page, widget grid, widgets, layout logic
       settings/          Settings page and its tabs
       placeholder/       "Under construction" page for upcoming modules
@@ -114,7 +118,7 @@ docs/                    Setup guides
 | Vitest | Unit tests |
 | electron-builder | Windows installer |
 | GitHub Actions | Free CI on Windows |
-| Supabase | Accounts, database, file storage (avatars); realtime later |
+| Supabase | Accounts, database, file storage (avatars), realtime (live friend updates) |
 | SQLite | *(later)* larger local data such as game libraries |
 
 ## Working together with Git
@@ -129,7 +133,7 @@ docs/                    Setup guides
 
 - Never store passwords yourself. Supabase Auth handles authentication.
 - Only the Supabase **publishable/anon** key belongs in the app. Never put a secret/service-role key in this repo; the app refuses to start with one.
-- Every table has Row Level Security. Users can only change their own profile and avatar, and the tests in `tests/db/` prove it.
+- Every table has Row Level Security. Users can only change their own profile and avatar. Friendships, blocks and online status can only be changed through checked database functions, and online status is only visible to friends. The 41 tests in `tests/db/` prove it.
 - Changing your password requires your current password, and deleting your account requires typing your username.
 - Never commit `.env` files (they are already in `.gitignore`).
 - Electron runs with context isolation, no Node integration and a sandboxed renderer.

@@ -15,6 +15,7 @@ import "./styles/settings.css";
 import "./styles/forms.css";
 import "./styles/auth.css";
 import "./styles/profile.css";
+import "./styles/friends.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

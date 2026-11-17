@@ -1,16 +1,16 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { CalendarDays, Camera, Clapperboard, Gamepad2, LogIn, Sparkles, Trash2, UserRound } from "lucide-react";
+import { useEffect, useState, type FormEvent } from "react";
+import { Camera, LogIn, Sparkles, Trash2, UserRound } from "lucide-react";
 import { Field, FormError, SubmitButton } from "@/components/ui/Field";
 import { Panel } from "@/components/ui/controls";
 import { isUsernameAvailable } from "@/features/auth/authApi";
-import { profileName, useAuth, type Profile } from "@/features/auth/authStore";
+import { useAuth, type Profile } from "@/features/auth/authStore";
 import { LIMITS, friendlyError, normalizeUsername, validateDisplayName, validateUsername } from "@/features/auth/validation";
 import { isHexColor } from "@/lib/color";
 import { pickFile } from "@/lib/files";
 import { useUi } from "@/store/uiStore";
 import { accentPresets } from "@/theme/palettes";
-import { Avatar } from "./Avatar";
 import { removeAvatar, updateProfile, uploadAvatar } from "./profileApi";
+import { ProfileView } from "./ProfileView";
 
 export function ProfilePage() {
   const status = useAuth(s => s.status);
@@ -70,8 +70,6 @@ function SignedOutProfile() {
 function ProfileCard({ profile }: { profile: Profile }) {
   const toast = useUi(s => s.toast);
   const [busy, setBusy] = useState(false);
-  const color = profile.profile_color && isHexColor(profile.profile_color) ? profile.profile_color : null;
-  const joined = useMemo(() => new Date(profile.created_at).toLocaleDateString([], { month: "long", year: "numeric" }), [profile.created_at]);
 
   const changeAvatar = async () => {
     const file = await pickFile("image/png,image/jpeg,image/webp,image/gif");
@@ -99,28 +97,18 @@ function ProfileCard({ profile }: { profile: Profile }) {
   };
 
   return (
-    <section className="panel profile-card" style={color ? ({ "--profile-color": color } as React.CSSProperties) : undefined}>
-      <div className="profile-card__banner" />
-      <div className="profile-card__avatar">
-        <Avatar profile={profile} size={96} />
+    <ProfileView
+      profile={profile}
+      avatarOverlay={
         <button className="profile-card__camera" onClick={changeAvatar} disabled={busy} aria-label="Change profile picture" title="Change profile picture">
           {busy ? <span className="spinner" /> : <Camera size={15} />}
         </button>
-      </div>
-      <div className="profile-card__body">
-        <h2>{profileName(profile)}</h2>
-        <div className="profile-card__username">@{profile.username}</div>
-        {profile.bio ? <p className="profile-card__bio">{profile.bio}</p> : <p className="profile-card__bio muted">No bio yet.</p>}
-        <div className="profile-card__facts">
-          {profile.favorite_game && <span><Gamepad2 size={13} /> {profile.favorite_game}</span>}
-          {profile.favorite_anime && <span><Clapperboard size={13} /> {profile.favorite_anime}</span>}
-          <span><CalendarDays size={13} /> Joined {joined}</span>
-        </div>
-        {profile.avatar_path && (
-          <button className="subtle-button danger" onClick={clearAvatar} disabled={busy}><Trash2 size={13} /> Remove picture</button>
-        )}
-      </div>
-    </section>
+      }
+    >
+      {profile.avatar_path && (
+        <button className="subtle-button danger" onClick={clearAvatar} disabled={busy}><Trash2 size={13} /> Remove picture</button>
+      )}
+    </ProfileView>
   );
 }
 

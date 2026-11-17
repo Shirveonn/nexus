@@ -104,6 +104,11 @@ export const useAuth = create<AuthState>()((set, get) => ({
     if (!supabase) return;
     writeGuest(false);
     set({ guest: false });
+    // Tell friends we're gone (best effort, don't wait long if offline).
+    await Promise.race([
+      supabase.rpc("go_offline").then(() => undefined, () => undefined),
+      new Promise(resolve => setTimeout(resolve, 1500))
+    ]);
     const { error } = await supabase.auth.signOut({ scope });
     // Even if the server call fails (e.g. offline), make sure we're signed out locally.
     if (error) await supabase.auth.signOut({ scope: "local" });
