@@ -1,5 +1,6 @@
-import { LayoutGrid, Library, Palette, PanelLeft, Settings, Wallpaper } from "lucide-react";
+import { CircleUserRound, LayoutGrid, Library, Palette, PanelLeft, Settings, Wallpaper } from "lucide-react";
 import { useUi, type SettingsTab } from "@/store/uiStore";
+import { AccountTab } from "./AccountTab";
 import { BackgroundTab } from "./BackgroundTab";
 import { DashboardTab } from "./DashboardTab";
 import { LibraryTab } from "./LibraryTab";
@@ -11,7 +12,8 @@ const tabs: { id: SettingsTab; label: string; icon: typeof Palette; Component: (
   { id: "background", label: "Background", icon: Wallpaper, Component: BackgroundTab },
   { id: "sidebar", label: "Sidebar", icon: PanelLeft, Component: SidebarTab },
   { id: "dashboard", label: "Dashboard", icon: LayoutGrid, Component: DashboardTab },
-  { id: "library", label: "Saved & sharing", icon: Library, Component: LibraryTab }
+  { id: "library", label: "Saved & sharing", icon: Library, Component: LibraryTab },
+  { id: "account", label: "Account", icon: CircleUserRound, Component: AccountTab }
 ];
 
 export function SettingsPage() {
@@ -23,7 +25,7 @@ export function SettingsPage() {
     <div className="page-content settings-page">
       <div className="eyebrow"><Settings size={13} /> PERSONALIZE</div>
       <h1>Make it <span>yours.</span></h1>
-      <p className="page-intro">Tune the look and feel of your NEXUS workspace. Everything saves automatically.</p>
+      <p className="page-intro">Tune the look and feel of your NEXUS workspace and manage your account. Changes save automatically.</p>
 
       <div className="tabs" role="tablist" aria-label="Settings sections">
         {tabs.map(t => (

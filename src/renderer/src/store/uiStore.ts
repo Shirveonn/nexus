@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { Page } from "@/app/navigation";
 
-export type SettingsTab = "themes" | "background" | "sidebar" | "dashboard" | "library";
+export type SettingsTab = "account" | "themes" | "background" | "sidebar" | "dashboard" | "library";
 
 interface Toast {
   id: number;

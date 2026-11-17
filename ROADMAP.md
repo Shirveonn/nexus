@@ -26,17 +26,19 @@ Goal: a fully customizable Windows desktop hub for our friend group, built with 
 
 Extras that came along: Clock and Notes widgets, interface scale, reduce motion, saved theme library, bundled fonts (works offline), production Content-Security-Policy.
 
-## Phase 3 – Accounts and profiles · v0.3.0 – User accounts
+## Phase 3 – Accounts and profiles · v0.3.0 – User accounts ✅
 
-- [ ] Registration
-- [ ] Login and logout
-- [ ] Username system
-- [ ] Profile pictures
-- [ ] Custom profile information
-- [ ] Account settings
-- [ ] Secure authentication through Supabase
+- [x] Registration: username (with live availability check), display name, email, password, 6-digit email code
+- [x] Login and logout: sign out on this PC or everywhere; stays signed in between launches
+- [x] Username system: unique, 3–20 characters, reserved names blocked, change once every 7 days
+- [x] Profile pictures: auto-cropped to 256×256 and stored in Supabase Storage
+- [x] Custom profile information: display name, bio, favourite game and anime, profile color
+- [x] Account settings: change email (codes to old and new address), change password, delete account
+- [x] Secure authentication through Supabase: Row Level Security on everything, proven by 24 database tests in CI
 
-> **Before starting:** create a free Supabase project at supabase.com. We'll need its **Project URL** and **publishable (anon) key**. Never share the service-role key.
+Extras: guest mode, forgot-password flow with codes, refusing to run with a leaked secret key, local Supabase for development.
+
+> **To go live:** follow [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) to create the free Supabase project, then add its URL and publishable key to `.env` and to the GitHub repository variables.
 
 ## Phase 4 – Friends · v0.4.0 – Social system
 

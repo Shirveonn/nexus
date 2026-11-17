@@ -1,8 +1,8 @@
 import {
-  Clapperboard, Gamepad2, Home, MessageSquare, Monitor, Settings, Trophy, Users, type LucideIcon
+  Clapperboard, Gamepad2, Home, MessageSquare, Monitor, Settings, Trophy, UserRound, Users, type LucideIcon
 } from "lucide-react";
 
-export type Page = "Home" | "Friends" | "Gaming" | "Arcade" | "Anime" | "Community" | "PC Center" | "Settings";
+export type Page = "Home" | "Friends" | "Gaming" | "Arcade" | "Anime" | "Community" | "PC Center" | "Settings" | "Profile";
 export type NavGroup = "MAIN" | "EXPLORE" | "SYSTEM";
 
 export interface NavItem {
@@ -12,6 +12,8 @@ export interface NavItem {
   /** Roadmap version that will deliver this module (shown on placeholder pages). */
   plannedVersion?: string;
   summary?: string;
+  /** Reachable from menus but not listed in the sidebar. */
+  hidden?: boolean;
 }
 
 export const navGroups: NavGroup[] = ["MAIN", "EXPLORE", "SYSTEM"];
@@ -24,7 +26,8 @@ export const navigation: NavItem[] = [
   { label: "Anime", icon: Clapperboard, group: "EXPLORE", plannedVersion: "0.6.0", summary: "Watchlists, ratings, favourite anime and characters." },
   { label: "Community", icon: MessageSquare, group: "EXPLORE", plannedVersion: "0.7.0", summary: "Private messages, group chats, polls and an activity feed." },
   { label: "PC Center", icon: Monitor, group: "EXPLORE", plannedVersion: "0.9.0", summary: "CPU, GPU, RAM, storage and network monitoring." },
-  { label: "Settings", icon: Settings, group: "SYSTEM" }
+  { label: "Settings", icon: Settings, group: "SYSTEM" },
+  { label: "Profile", icon: UserRound, group: "SYSTEM", hidden: true }
 ];
 
 export const navItem = (page: Page) => navigation.find(n => n.label === page) ?? navigation[0];

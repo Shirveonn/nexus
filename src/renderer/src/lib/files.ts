@@ -46,3 +46,23 @@ export async function imageFileToDataUrl(file: File, maxWidth = 2560, maxHeight 
   bitmap.close();
   return canvas.toDataURL("image/jpeg", quality);
 }
+
+/** Center-crops an image to a square of `size`×`size` px and returns a JPEG blob (for avatars). */
+export async function squareImage(file: File, size = 256, quality = 0.88): Promise<Blob> {
+  if (!file.type.startsWith("image/")) throw new Error("Please choose an image file.");
+  if (file.size > MAX_SOURCE_BYTES) throw new Error("That image is too large (max 25 MB).");
+  const bitmap = await createImageBitmap(file).catch(() => {
+    throw new Error("That image couldn't be read.");
+  });
+  const side = Math.min(bitmap.width, bitmap.height);
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Image processing isn't available.");
+  ctx.drawImage(bitmap, (bitmap.width - side) / 2, (bitmap.height - side) / 2, side, side, 0, 0, size, size);
+  bitmap.close();
+  return new Promise((resolve, reject) =>
+    canvas.toBlob(b => (b ? resolve(b) : reject(new Error("Image processing failed."))), "image/jpeg", quality)
+  );
+}

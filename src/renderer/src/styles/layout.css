@@ -83,9 +83,12 @@
 .connection { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 10px; padding: 12px 8px; border-bottom: 1px solid var(--line); }
 .status-dot, .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 9px var(--success); }
 .preview-tag { margin-left: auto; color: var(--muted); font-size: 8px; letter-spacing: 1px; }
-.user-card { display: flex; align-items: center; gap: 9px; padding: 13px 5px 2px; }
+.user-card { width: 100%; display: flex; align-items: center; gap: 9px; padding: 10px 7px; margin-top: 4px; border: 0; border-radius: 9px; background: transparent; text-align: left; }
+.user-card:hover { background: var(--surface-hover); }
+.status-dot--idle { background: var(--muted); box-shadow: none; }
 .sidebar--compact .user-card { justify-content: center; padding-inline: 0; }
-.user-meta { display: grid; gap: 3px; flex: 1; }
+.user-meta { display: grid; gap: 3px; flex: 1; min-width: 0; }
+.user-meta strong, .user-meta small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* --- Topbar ------------------------------------------------------------------ */
 
@@ -109,6 +112,7 @@
 }
 .search kbd { margin-left: auto; border: 1px solid var(--line); border-radius: 4px; padding: 2px 4px; font-size: 9px; font-family: inherit; }
 .notification i { position: absolute; right: 5px; top: 5px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.profile-pill span { max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .profile-pill { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; font-size: 10px; }
 .profile-pill svg { color: var(--muted); }
 

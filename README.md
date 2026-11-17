@@ -2,7 +2,7 @@
 
 A fully customizable Windows desktop hub for our friend group: gaming, anime, friends, chat, mini-games and PC stats in one place. Built only with free tools and free services.
 
-**Current version: `0.2.0` – Make NEXUS yours.** See [ROADMAP.md](ROADMAP.md) for what's done and what's next.
+**Current version: `0.3.0` – User accounts.** See [ROADMAP.md](ROADMAP.md) for what's done and what's next.
 
 ## What works right now
 
@@ -15,8 +15,14 @@ A fully customizable Windows desktop hub for our friend group: gaming, anime, fr
 - **Interface scale** (80–130%) and a reduce-motion option
 - **Saved themes**, plus **import and export** as `.json` files to share with friends
 - Everything saves automatically on your PC
+- **Accounts** (Supabase): sign up with a username, confirm with a 6-digit email code, sign in or out, reset a forgotten password
+- **Profiles**: profile picture, display name, bio, favourite game and anime, profile color
+- **Account settings**: change email or password, sign out on this PC or everywhere, delete your account
+- **Guest mode**: use NEXUS without an account (local features only)
 
-Accounts, friends, game library, anime, chat, arcade and PC monitoring are still placeholders; they arrive in later versions.
+Friends, game library, anime, chat, arcade and PC monitoring are still placeholders; they arrive in later versions.
+
+> **First time?** Accounts need a free Supabase project. Follow **[docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)**. Without it, NEXUS runs in guest mode.
 
 ## Requirements
 
@@ -31,6 +37,7 @@ Accounts, friends, game library, anime, chat, arcade and PC monitoring are still
 git clone https://github.com/Shirveonn/nexus.git
 cd nexus
 npm install
+cp .env.example .env   # then fill in your Supabase details (Windows: copy .env.example .env)
 npm run dev
 ```
 
@@ -42,6 +49,9 @@ npm run dev
 | --- | --- |
 | `npm run dev` | Start the app in development mode |
 | `npm test` | Run the unit tests |
+| `npm run test:db` | Run the database security tests (needs `npm run db:start` and Docker) |
+| `npm run db:start` / `db:stop` / `db:reset` | Run a local Supabase for development |
+| `npm run db:types` | Regenerate TypeScript types after changing the database |
 | `npm run check` | Type-check and run the tests (run this before pushing) |
 | `npm run build` | Production build into `out/` |
 | `npm run dist:win` | Build a Windows installer into `release/` |
@@ -67,16 +77,25 @@ src/renderer/
       layout/            Sidebar, Topbar, wallpaper layer
       ui/                Reusable controls (toggle, slider, segmented, panel, toasts)
     features/            One folder per module
+      auth/              Sign-in screen, auth state (authStore), account actions, input rules
+      profile/           Profile page, avatars, profile API
       dashboard/         Home page, widget grid, widgets, layout logic
       settings/          Settings page and its tabs
       placeholder/       "Under construction" page for upcoming modules
     store/               Zustand stores (settingsStore = saved; uiStore = session only)
     theme/               Palettes, wallpapers, presets, theme-file import/export + validation
-    lib/                 Small helpers (colors, files/images)
+    lib/                 Helpers: Supabase client, colors, files/images
     styles/              CSS split by area (base, layout, dashboard, settings)
     types/               Shared TypeScript types
-tests/                   Unit tests (Vitest)
-.github/workflows/       CI: test + build + package on Windows
+supabase/
+  migrations/            Database tables + security rules (SQL), applied in order
+  templates/             Email templates (6-digit codes)
+  config.toml            Settings for the local development Supabase
+tests/
+  unit/                  Fast tests, no network (`npm test`)
+  db/                    Security tests against a real local Supabase (`npm run test:db`)
+docs/                    Setup guides
+.github/workflows/       CI: Windows build + installer, database tests
 ```
 
 **Adding a new module** (e.g. Friends in 0.4.0): create `src/renderer/src/features/friends/FriendsPage.tsx`, then render it in `app/App.tsx` in place of the placeholder.
@@ -95,7 +114,7 @@ tests/                   Unit tests (Vitest)
 | Vitest | Unit tests |
 | electron-builder | Windows installer |
 | GitHub Actions | Free CI on Windows |
-| Supabase | *(0.3.0+)* accounts, database and realtime |
+| Supabase | Accounts, database, file storage (avatars); realtime later |
 | SQLite | *(later)* larger local data such as game libraries |
 
 ## Working together with Git
@@ -108,10 +127,12 @@ tests/                   Unit tests (Vitest)
 
 ## Security notes
 
-- Never store passwords yourself. Supabase Auth handles authentication from 0.3.0.
-- Only the Supabase **publishable/anon** key belongs in the app. Never put a service-role key or any other secret in this repo.
+- Never store passwords yourself. Supabase Auth handles authentication.
+- Only the Supabase **publishable/anon** key belongs in the app. Never put a secret/service-role key in this repo; the app refuses to start with one.
+- Every table has Row Level Security. Users can only change their own profile and avatar, and the tests in `tests/db/` prove it.
+- Changing your password requires your current password, and deleting your account requires typing your username.
 - Never commit `.env` files (they are already in `.gitignore`).
 - Electron runs with context isolation, no Node integration and a sandboxed renderer.
-- Production builds ship a strict Content-Security-Policy (`electron.vite.config.ts`). When Supabase is added, its URL must be added to `connect-src`.
+- Production builds ship a strict Content-Security-Policy (`electron.vite.config.ts`) that only allows connections to your own Supabase project.
 - Imported theme files are untrusted. Every value is validated, and only embedded `data:` images are accepted, never remote URLs.
 - External `https` links open in your normal browser, never inside NEXUS.

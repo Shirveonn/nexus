@@ -1,4 +1,5 @@
 import { Check, LayoutGrid, Palette, Plus, RotateCcw, Sparkles } from "lucide-react";
+import { profileName, useAuth } from "@/features/auth/authStore";
 import { useSettings } from "@/store/settingsStore";
 import { useUi } from "@/store/uiStore";
 import { WidgetFrame } from "./WidgetFrame";
@@ -12,6 +13,7 @@ export function DashboardPage() {
   const setEditing = useUi(s => s.setEditingLayout);
   const navigate = useUi(s => s.navigate);
 
+  const profile = useAuth(s => s.profile);
   const hidden = widgets.filter(w => !w.visible);
 
   return (
@@ -19,7 +21,7 @@ export function DashboardPage() {
       <section className="welcome-row">
         <div>
           <div className="eyebrow"><Sparkles size={13} /> YOUR SPACE. YOUR RULES.</div>
-          <h1>Welcome to <span>NEXUS.</span></h1>
+          {profile ? <h1>Welcome back, <span>{profileName(profile)}.</span></h1> : <h1>Welcome to <span>NEXUS.</span></h1>}
           <p>Your gaming world, connected in one place.</p>
         </div>
         <div className="button-row">
