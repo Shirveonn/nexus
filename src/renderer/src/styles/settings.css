@@ -1,0 +1,83 @@
+/* ==========================================================================
+   Settings page.
+   ========================================================================== */
+
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; margin: 26px 0 4px; padding: 4px; width: fit-content; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); }
+.tabs button { display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent; color: var(--text-dim); padding: 8px 13px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+.tabs button:hover { color: var(--text); }
+.tabs button.active { background: var(--accent-soft); color: var(--text); box-shadow: inset 0 0 0 1px var(--accent-border); }
+.tabs button.active svg { color: var(--accent); }
+
+.settings-stack { display: grid; gap: 16px; max-width: 900px; margin-top: 16px; }
+.settings-stack > .panel { padding: 21px; }
+
+/* --- Palettes ---------------------------------------------------------------- */
+
+.palette-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-top: 18px; }
+.palette-card { position: relative; display: grid; gap: 10px; padding: 8px 8px 11px; text-align: left; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.palette-card:hover { border-color: var(--accent-border); }
+.palette-card.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.palette-card__preview { height: 64px; border-radius: 7px; display: flex; gap: 6px; padding: 6px; border: 1px solid rgba(128, 128, 128, 0.2); }
+.palette-card__preview > span:first-child { width: 22%; border-radius: 4px; }
+.palette-card__preview > span:last-child { flex: 1; border-radius: 4px; border: 1px solid; padding: 7px; display: grid; gap: 5px; align-content: start; }
+.palette-card__preview i { display: block; height: 4px; border-radius: 3px; }
+.palette-card__preview i:nth-child(1) { width: 70%; }
+.palette-card__preview i:nth-child(2) { width: 45%; }
+.palette-card__preview i:nth-child(3) { width: 30%; }
+.palette-card__meta { display: grid; gap: 3px; padding: 0 3px; }
+.palette-card__meta strong { font-size: 11px; }
+.palette-card__meta small { font-size: 9px; color: var(--muted); }
+.palette-card__check { position: absolute; right: 11px; bottom: 13px; color: var(--accent); }
+
+/* --- Accent ------------------------------------------------------------------ */
+
+.accent-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.accent-swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; box-shadow: 0 0 12px -2px currentColor; transition: transform 0.12s; }
+.accent-swatch:hover { transform: scale(1.08); }
+.accent-swatch.selected { border-color: var(--text); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px currentColor; }
+.accent-custom { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 5px 11px 5px 5px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 10px; font-weight: 600; cursor: pointer; }
+.accent-custom.selected { border-color: var(--accent); }
+.accent-custom input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.accent-custom span { width: 20px; height: 20px; border-radius: 50%; background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red); }
+.hex-input { width: 92px; font-family: ui-monospace, monospace; text-transform: lowercase; }
+
+/* --- Wallpapers -------------------------------------------------------------- */
+
+.wallpaper-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin: 6px 0 10px; }
+.wallpaper-card { display: grid; gap: 8px; padding: 6px 6px 9px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 10px; font-weight: 600; text-align: center; }
+.wallpaper-card:hover { border-color: var(--accent-border); }
+.wallpaper-card.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.wallpaper-card > span { height: 70px; border-radius: 7px; display: grid; place-items: center; color: var(--muted); }
+.wallpaper-card--upload > span { border: 1px dashed var(--line); }
+
+/* --- Dashboard widgets list -------------------------------------------------- */
+
+.widget-list { display: grid; gap: 8px; margin-top: 18px; }
+.widget-list__row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
+.widget-list__row.is-hidden { opacity: 0.6; }
+.widget-list__text { flex: 1; display: grid; gap: 3px; }
+.widget-list__text strong { font-size: 11px; }
+.widget-list__text small { font-size: 9px; color: var(--muted); }
+
+/* --- Theme library ----------------------------------------------------------- */
+
+.save-row { display: flex; gap: 9px; margin-top: 16px; }
+.save-row .text-input { flex: 1; max-width: 320px; height: 38px; }
+
+.theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-top: 16px; }
+.theme-card { position: relative; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.theme-card:hover { border-color: var(--accent-border); }
+.theme-card__apply { display: grid; gap: 9px; width: 100%; padding: 6px 6px 10px; border: 0; background: transparent; text-align: left; }
+.theme-card__apply strong { font-size: 11px; padding: 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.theme-card__actions { position: absolute; right: 4px; bottom: 3px; display: flex; }
+.theme-card__actions .icon-button { padding: 5px; }
+
+.theme-swatch { position: relative; height: 76px; border-radius: 7px; overflow: hidden; border: 1px solid rgba(128, 128, 128, 0.2); }
+.theme-swatch__sidebar { position: absolute; top: 0; bottom: 0; width: 24%; padding: 8px 6px; }
+.theme-swatch__sidebar i { display: block; height: 5px; border-radius: 3px; width: 80%; }
+.theme-swatch__body { position: absolute; top: 8px; bottom: 8px; width: 62%; display: grid; grid-template-rows: 1.3fr 1fr; gap: 5px; }
+.theme-swatch__body > div { border-radius: 4px; border: 1px solid; padding: 6px; }
+.theme-swatch__body i { display: block; width: 40%; height: 5px; border-radius: 3px; }
+
+.danger-panel { border-color: color-mix(in srgb, var(--danger) 25%, var(--line)); }
+.danger-panel .button-row { margin-top: 14px; }

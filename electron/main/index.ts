@@ -1,5 +1,13 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, shell } from "electron";
 import { join } from "node:path";
+
+function isSafeExternalUrl(url: string): boolean {
+  try {
+    return new URL(url).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
 
 function createWindow() {
   const window = new BrowserWindow({
@@ -16,6 +24,20 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: true
     }
+  });
+
+  // Never open new Electron windows from the UI; send https links to the user's browser instead.
+  window.webContents.setWindowOpenHandler(({ url }) => {
+    if (isSafeExternalUrl(url)) void shell.openExternal(url);
+    return { action: "deny" };
+  });
+
+  // Block the app window itself from navigating away from NEXUS.
+  window.webContents.on("will-navigate", (event, url) => {
+    const devUrl = process.env.ELECTRON_RENDERER_URL;
+    if (devUrl && url.startsWith(devUrl)) return;
+    event.preventDefault();
+    if (isSafeExternalUrl(url)) void shell.openExternal(url);
   });
 
   if (process.env.ELECTRON_RENDERER_URL) {
