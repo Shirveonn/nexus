@@ -61,9 +61,11 @@ export async function createUser(username = uniqueName()) {
 export async function latestCode(email: string): Promise<string> {
   for (let attempt = 0; attempt < 20; attempt++) {
     const res = await fetch(`${MAILPIT_URL}/api/v1/search?query=${encodeURIComponent(`to:"${email}"`)}`);
-    const body = (await res.json()) as { messages: { ID: string }[] };
-    if (body.messages?.length) {
-      const msg = await (await fetch(`${MAILPIT_URL}/api/v1/message/${body.messages[0].ID}`)).json() as { HTML: string; Text: string };
+    const body = (await res.json()) as { messages: { ID: string; To: { Address: string }[] }[] };
+    // Search matches substrings (a@x.test also matches new.a@x.test), so keep exact recipients only.
+    const mine = (body.messages ?? []).filter(m => m.To.some(t => t.Address.toLowerCase() === email.toLowerCase()));
+    if (mine.length) {
+      const msg = await (await fetch(`${MAILPIT_URL}/api/v1/message/${mine[0].ID}`)).json() as { HTML: string; Text: string };
       const match = /(\d{6,10})/.exec(msg.Text || msg.HTML.replace(/<[^>]+>/g, " "));
       if (match) return match[1];
     }
